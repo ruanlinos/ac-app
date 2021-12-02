@@ -1,20 +1,66 @@
 import React from 'react';
-import { icons } from '../assets/icons';
-import Icons from './Icons';
+import styled from 'styled-components';
+import {
+  variant,
+  color as styledSystemColor,
+  space,
+  SpaceProps,
+} from 'styled-system';
 
-// import { Container } from './styles';
-
-
-interface ButtonProps{
+const buttonTypes = {
+  outline: {
+    padding: "10px 14px",
+    border: "1px solid #C8D0DA",
+    borderRadius: 5,
+    "max-height": 40,
+    maxWidth: 40,
+  },
+  navButton: {
+    alignItems: "center",
+    display: "flex",
+    padding: "11px 12px",
+    "&:hover": {
+      background: "rgba(0, 0, 0, 0.2)",
+      borderRadius: 5,
+    }
+  }
+}
+interface ButtonProps {
+  type?: keyof typeof buttonTypes;
   title?: string;
-  icon?: keyof typeof icons;
+  Icon?: () => React.ReactElement;
+  onClick?: () => void;
 }
 
-export function Button({title, icon}: ButtonProps) {
+
+interface ButtonStyleProps {
+  type: keyof typeof buttonTypes;
+}
+
+const Container = styled.div<ButtonStyleProps>(
+  styledSystemColor,
+  space,
+  variant({
+    prop: 'type',
+    variants: buttonTypes,
+  }),
+  {
+    cursor: "pointer",
+  }
+);
+
+const Title = styled.span`
+  font-size: 14px;
+  line-height: 15px;
+  color: #FFFFFF;
+  margin-left: 10px;
+`;
+
+export function Button({ title, type = "outline", Icon, ...rest }: ButtonProps & SpaceProps) {
   return (
-    <div>
-      {icon ? <Icons name={icon} /> : null}
-      {title ? <span>{title}</span> : null}
-    </div>
+    <Container type={type} {...rest}>
+      {Icon ? <Icon /> : null}
+      {title ? <Title>{title}</Title> : null}
+    </Container>
   )
 }
